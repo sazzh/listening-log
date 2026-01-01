@@ -1,13 +1,5 @@
 import { createArtistService, getAllArtistsService, getArtistByIdService, updateArtistService, deleteArtistService } from "../models/artistModel.js";
-
-// Standardised response function
-const handleResponse = (res, status, message, data = null) => {
-    res.status(status).json({
-        status,
-        message,
-        data
-    });
-};
+import handleResponse from "../Utils/responseHandler.js";
 
 export const createArtist = async (req, res, next) => {
     const { artistName, artistType, artistCountry, artistDisambiguation, isDisbanded } = req.body;

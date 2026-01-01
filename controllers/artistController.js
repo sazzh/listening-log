@@ -1,10 +1,10 @@
-import { createArtistService, getAllArtistsService, getArtistByIdService, updateArtistService, deleteArtistService } from "../models/artistModel.js";
 import handleResponse from "../Utils/responseHandler.js";
+import * as artistModel from "../models/artistModel.js";
 
 export const createArtist = async (req, res, next) => {
     const { artistName, artistType, artistCountry, artistDisambiguation, isDisbanded } = req.body;
     try {
-        const newArtist = await createArtistService(artistName, artistType, artistCountry, artistDisambiguation, isDisbanded);
+        const newArtist = await artistModel.createArtist(artistName, artistType, artistCountry, artistDisambiguation, isDisbanded);
         return handleResponse(res, 201, 'Artist created successfully', newArtist);
     } catch (err) {
         next(err);
@@ -13,7 +13,7 @@ export const createArtist = async (req, res, next) => {
 
 export const getAllArtists = async (req, res, next) => {
     try {
-        const artists = await getAllArtistsService();
+        const artists = await artistModel.getAllArtists();
         return handleResponse(res, 200, 'Artists fetched successfully', artists);
     } catch (err) {
         next(err);
@@ -22,7 +22,7 @@ export const getAllArtists = async (req, res, next) => {
 
 export const getArtistById = async (req, res, next) => {
     try {
-        const artist = await getArtistByIdService(req.params.id);
+        const artist = await artistModel.getArtistById(req.params.id);
         if (!artist) {
             return handleResponse(res, 404, 'Artist not found');
         }
@@ -35,7 +35,7 @@ export const getArtistById = async (req, res, next) => {
 export const updateArtist = async (req, res, next) => {
     const { artistName, artistType, artistCountry, artistDisambiguation, isDisbanded } = req.body;
     try {
-        const updatedArtist = await updateArtistService(req.params.id, artistName, artistType, artistCountry, artistDisambiguation, isDisbanded);
+        const updatedArtist = await artistModel.updateArtist(req.params.id, artistName, artistType, artistCountry, artistDisambiguation, isDisbanded);
         if (!updatedArtist) {
             return handleResponse(res, 404, 'Artist not found');
         }
@@ -47,7 +47,7 @@ export const updateArtist = async (req, res, next) => {
 
 export const deleteArtist = async (req, res, next) => {
     try {
-        const deletedArtist = await deleteArtistService(req.params.id);
+        const deletedArtist = await artistModel.deleteArtist(req.params.id);
         if (!deletedArtist) {
             return handleResponse(res, 404, 'Artist not found');
         }

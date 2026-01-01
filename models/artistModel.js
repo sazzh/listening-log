@@ -21,7 +21,7 @@ export const createArtistService = async (artistName, artistType, artistCountry,
 
 // Update an existing artist in the database
 export const updateArtistService = async (artistId, artistName, artistType, artistCountry, artistDisambiguation, isDisbanded) => {
-    const result = await db.query('UPDATE artists SET artist_name = $1, artist_type = $2, artist_country = $3, artist_disambiguation = $4, is_disbanded = $5 WHERE id = $6 RETURNING *',
+    const result = await db.query('UPDATE artists SET artist_name = $1, artist_type = $2, artist_country = $3, artist_disambiguation = $4, is_disbanded = $5 WHERE artist_id = $6 RETURNING *',
         [artistName, artistType, artistCountry, artistDisambiguation, isDisbanded, artistId]
     );
     return result.rows[0];

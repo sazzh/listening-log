@@ -1,8 +1,8 @@
 import express from 'express';
 import path from 'path';
 import 'dotenv/config';
-import errorHandler from './errorHandler.js';
 import artistRoutes from './routes/artistRoutes.js';
+import errorHandler from './Utils/errorHandler.js';
 
 const app = express();
 const PORT = process.env.PORT || 8325;

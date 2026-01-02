@@ -25,7 +25,7 @@ export const registerUser = async (req, res, next) => {
             return handleResponse(res, 400, 'Username, password, and first name are required');
         }
 
-        if (await userModel.emailExists(email) || await userModel.usernameExists(username)) {
+        if (await userModel.getUserByEmail(email) || await userModel.getUserByUsername(username)) {
             return handleResponse(res, 409, 'User with this email or username already exists');
         }
 

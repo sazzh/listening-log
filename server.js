@@ -3,6 +3,7 @@ import path from 'path';
 import 'dotenv/config';
 import artistRoutes from './routes/artistRoutes.js';
 import songRoutes from './routes/songRoutes.js';
+import albumRoutes from './routes/albumRoutes.js';
 import errorHandler from './Utils/errorHandler.js';
 
 const app = express();
@@ -21,6 +22,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/artists', artistRoutes);
 app.use('/api/songs', songRoutes);
+app.use('/api/albums', albumRoutes);
 
 // Error handling
 app.use(errorHandler);

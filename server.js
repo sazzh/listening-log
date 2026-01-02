@@ -4,7 +4,9 @@ import 'dotenv/config';
 import artistRoutes from './routes/artistRoutes.js';
 import songRoutes from './routes/songRoutes.js';
 import albumRoutes from './routes/albumRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import errorHandler from './Utils/errorHandler.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const PORT = process.env.PORT || 8325;
@@ -13,6 +15,7 @@ const PORT = process.env.PORT || 8325;
 app.use(express.static(path.join(import.meta.dirname, 'public'))); // serve static files from 'public' directory
 app.use(express.json()); // recognise request body as JSON
 app.use(express.urlencoded({ extended: true })); // recognise request body as strings or arrays
+app.use(cookieParser()); // parse cookies
 app.set('view engine', 'ejs'); // set EJS as templating engine
 
 // Setup Routes
@@ -23,6 +26,7 @@ app.get('/', (req, res) => {
 app.use('/api/artists', artistRoutes);
 app.use('/api/songs', songRoutes);
 app.use('/api/albums', albumRoutes);
+app.use('/api/auth', authRoutes);
 
 // Error handling
 app.use(errorHandler);

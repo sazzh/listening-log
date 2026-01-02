@@ -71,3 +71,8 @@ export const loginUser = async (req, res, next) => {
         next(err);
     }
 };
+// Logout user
+export const logoutUser = async (req, res, next) => {
+    res.cookie('token', '', { ...cookieOptions, maxAge: 1 }); // Override token cookie to empty string and set to expire 1ms
+    return handleResponse(res, 200, 'User logged out successfully');
+};

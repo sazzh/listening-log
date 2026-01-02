@@ -43,6 +43,31 @@ export const registerUser = async (req, res, next) => {
     }
 };
 
+// Login user
 export const loginUser = async (req, res, next) => {
-    const { username, password } = req.body;
+    try {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
+            return handleResponse(res, 400, 'Username and password are required');
+        }
+
+        const user = await userModel.getUserByUsername(username);
+
+        if (!user) {
+            return handleResponse(res, 401, 'Invalid username');
+        }
+
+        const isMatch = await bcrypt.compare(password, user.passwd);
+        if (!isMatch) {
+            return handleResponse(res, 401, 'Invalid password');
+        }
+
+        const token = generateToken(user.user_id);
+        res.cookie('token', token, cookieOptions); // Set cookie containing JWT in user's browser so they can stay logged in
+        return handleResponse(res, 200, 'User logged in successfully', { userId: user.user_id, username: user.username, firstName: user.first_name, lastName: user.last_name, email: user.email });
+
+    } catch (err) {
+        next(err);
+    }
 };

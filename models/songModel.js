@@ -13,9 +13,9 @@ export const getSongById = async (songId) => {
 };
 
 // Create a new song in the database
-export const createSong = async (songName, songLength, dateReleased, trackNumber, albumId) => {
-    const result = await db.query('INSERT INTO songs ( song_name, song_length, date_released, track_number, album_id ) VALUES ( $1, $2, $3, $4, $5 ) RETURNING *', 
-        [songName, songLength, dateReleased, trackNumber, albumId]);
+export const createSong = async (songName, songLength, dateReleased) => {
+    const result = await db.query('INSERT INTO songs ( song_name, song_length, date_released ) VALUES ( $1, $2, $3 ) RETURNING *', 
+        [songName, songLength, dateReleased]);
     return result.rows[0];
 }
 
@@ -32,10 +32,25 @@ export const addSongArtistAssociation = async (songId, artistIds) => {
     return insertedRows;
 }
 
+// Add association between song and album in the database
+export const addSongAlbumAssociation = async (songId, albumIds, trackNumbers = []) => {
+    // dynamic format of (song_id, album_id, track_number) VALUES ($1, $2, $3), ($1, $4, $5), ...
+    const values = albumIds.map((albumId, index) => `($1, $${index * 2 + 2}, $${index * 2 + 3})`).join(', ');
+    const params = [songId];
+    albumIds.forEach((id, index) => {
+        params.push(id);
+        params.push(trackNumbers[index] || null);
+    });
+
+    const query = `INSERT INTO song_albums (song_id, album_id, track_number) VALUES ${values} RETURNING *`;
+    const result = await db.query(query, params);
+    return result.rows;
+};
+
 // Update an existing song in the database
-export const updateSong = async (songId, songName, songLength, dateReleased, trackNumber) => {
-    const result = await db.query('UPDATE songs SET song_name = $1, song_length = $2, date_released = $3, track_number = $4 WHERE song_id = $5 RETURNING *',
-        [songName, songLength, dateReleased, trackNumber, songId]
+export const updateSong = async (songId, songName, songLength, dateReleased) => {
+    const result = await db.query('UPDATE songs SET song_name = $1, song_length = $2, date_released = $3 WHERE song_id = $4 RETURNING *',
+        [songName, songLength, dateReleased, songId]
     );
     return result.rows[0];
 }

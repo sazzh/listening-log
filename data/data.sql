@@ -28,10 +28,8 @@ CREATE TABLE IF NOT EXISTS Songs (
 	song_name TEXT NOT NULL,
 	song_length INTEGER,
 	date_released DATE NOT NULL,
-	track_number SMALLINT, -- smallint due to typical album length
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-	updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-	album_id INTEGER REFERENCES albums(album_id)
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 )
 
 -- Associative table to allow songs to have multiple artists
@@ -39,6 +37,14 @@ CREATE TABLE IF NOT EXISTS Song_Artists (
 	song_id INTEGER NOT NULL REFERENCES songs(song_id) ON DELETE CASCADE,
 	artist_id INTEGER NOT NULL REFERENCES artists(artist_id) ON DELETE CASCADE, -- deletes association if either song/artist are deleted
 	PRIMARY KEY (song_id, artist_id)	
+)
+
+-- Associative table to allow songs to be on multiple albums
+CREATE TABLE IF NOT EXISTS Song_Albums (
+	song_id INTEGER NOT NULL REFERENCES songs(song_id) ON DELETE CASCADE,
+	album_id INTEGER NOT NULL REFERENCES albums(album_id) ON DELETE CASCADE,
+	track_number INTEGER -- specfic to each album
+	PRIMARY KEY (song_id, album_id)
 )
 
 

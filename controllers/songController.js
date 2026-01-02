@@ -2,11 +2,15 @@ import handleResponse from "../Utils/responseHandler.js";
 import * as songModel from "../models/songModel.js";
 
 export const createSong = async (req, res, next) => {
-    const { songName, songLength, dateReleased, trackNumber, albumId, artistIds } = req.body;
+    const { songName, songLength, dateReleased, artistIds, albumIds, trackNumbers } = req.body;
     try {
-        const newSong = await songModel.createSong(songName, songLength, dateReleased, trackNumber, albumId);
+        const newSong = await songModel.createSong(songName, songLength, dateReleased);
+        // Add artist and album associations
         if (artistIds && artistIds.length > 0) {
             await songModel.addSongArtistAssociation(newSong.song_id, artistIds);
+        }
+        if (albumIds && albumIds.length > 0) {
+            await songModel.addSongAlbumAssociation(newSong.song_id, albumIds, trackNumbers);
         }
         return handleResponse(res, 201, 'Song created successfully', newSong);
     } catch (err) {
@@ -14,6 +18,7 @@ export const createSong = async (req, res, next) => {
     }
 };
 
+// req isn't used in this function but is needed in parameter list
 export const getAllSongs = async (req, res, next) => {
     try {
         const songs = await songModel.getAllSongs();
@@ -36,9 +41,9 @@ export const getSongById = async (req, res, next) => {
 };
 
 export const updateSong = async (req, res, next) => {
-    const { songName, songLength, dateReleased, trackNumber } = req.body;
+    const { songName, songLength, dateReleased } = req.body;
     try {
-        const updatedSong = await songModel.updateSong(req.params.id, songName, songLength, dateReleased, trackNumber);
+        const updatedSong = await songModel.updateSong(req.params.id, songName, songLength, dateReleased);
         if (!updatedSong) {
             return handleResponse(res, 404, 'Song not found');
         }

@@ -1,10 +1,16 @@
 import db from '../db.js';
 
 // Check if user with given email exists in database
-export const userExists = async (email) => {
+export const emailExists = async (email) => {
     const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     return result.rows.length > 0;
 };
+
+// Check if user with given username exists in database
+export const usernameExists = async (username) => {
+    const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+    return result.rows.length > 0;
+}
 
 // Create a new user in the database
 // Returns non-sensitive user info (no password)

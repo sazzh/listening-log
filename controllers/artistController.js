@@ -11,6 +11,7 @@ export const createArtist = async (req, res, next) => {
     }
 };
 
+// req isn't used in this function but is needed in parameter list
 export const getAllArtists = async (req, res, next) => {
     try {
         const artists = await artistModel.getAllArtists();

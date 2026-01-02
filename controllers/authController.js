@@ -71,6 +71,13 @@ export const loginUser = async (req, res, next) => {
         next(err);
     }
 };
+
+// Retrieve current logged-in user info
+export const getCurrentUser = async (req, res, next) => {
+    res.json(req.user);
+    // return info from protect middleware
+};
+
 // Logout user
 export const logoutUser = async (req, res, next) => {
     res.cookie('token', '', { ...cookieOptions, maxAge: 1 }); // Override token cookie to empty string and set to expire 1ms

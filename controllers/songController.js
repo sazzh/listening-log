@@ -40,6 +40,16 @@ export const getSongById = async (req, res, next) => {
     }
 };
 
+export const addSongArtistAssociation = async (req, res, next) => {
+    const { songId, artistIds } = req.body;
+    try {
+        const newAssociation = await songModel.addSongArtistAssociation(songId, artistIds);
+        return handleResponse(res, 201, 'Artist(s) associated with song successfully', newAssociation);
+    } catch (err) {
+        next(err);
+    }
+};
+
 export const updateSong = async (req, res, next) => {
     const { songName, songLength, dateReleased } = req.body;
     try {

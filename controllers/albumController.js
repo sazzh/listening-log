@@ -54,13 +54,10 @@ export const updateAlbum = async (req, res, next) => {
 
 // Add song to album after creation
 export const addSongToAlbum = async (req, res, next) => {
-    const { albumId, songId, trackNumber } = req.body;
+    const { albumIds, songId, trackNumbers } = req.body;
     try {
-        const updatedAlbum = await albumModel.getAlbumById(albumId, songId, trackNumber);
-        if (!updatedAlbum) {
-            return handleResponse(res, 404, 'Album not found');
-        }
-        return handleResponse(res, 200, 'Song added to album successfully', updatedAlbum);
+        const newAssociation = await addSongAlbumAssociation(songId, albumIds, trackNumbers);
+        return handleResponse(res, 200, 'Song added to album successfully', newAssociation);
     } catch (err) {
         next(err);
     }

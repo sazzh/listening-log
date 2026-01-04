@@ -4,12 +4,13 @@ import protect from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/', protect, getUserPlaylists); // Playlists only exist per user not app wide
+// Majority are protected as playlists are user specific and not accessible app wide
+router.get('/', protect, getUserPlaylists);
 router.get('/:id', getPlaylistById);
-router.post('/', createPlaylist);
-router.post('/:id/songs', addSongToPlaylist);
-router.delete('/:id/songs/:songId', removeSongFromPlaylist);
-router.put('/:id', updatePlaylist);
-router.delete('/:id', deletePlaylist);
+router.post('/', protect, createPlaylist);
+router.post('/:id/songs', protect, addSongToPlaylist);
+router.delete('/:id/songs/:songId', protect, removeSongFromPlaylist);
+router.put('/:id', protect, updatePlaylist);
+router.delete('/:id', protect,deletePlaylist);
 
 export default router;

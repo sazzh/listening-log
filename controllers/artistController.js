@@ -1,5 +1,6 @@
 import handleResponse from "../Utils/responseHandler.js";
 import * as artistModel from "../models/artistModel.js";
+import { logUserEvent } from "../models/userEventModel.js";
 
 export const createArtist = async (req, res, next) => {
     const { artistName, artistType, artistCountry, artistDisambiguation, isDisbanded } = req.body;
@@ -53,6 +54,19 @@ export const deleteArtist = async (req, res, next) => {
             return handleResponse(res, 404, 'Artist not found');
         }
         return handleResponse(res, 200, 'Artist deleted successfully', deletedArtist);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const setUserArtistPreference = async (req, res, next) => {
+    const { preference } = req.body;
+    const artistId = req.params.id;
+    const userId = req.user.user_id;
+    try {
+        const userArtistPreference = await artistModel.setUserArtistPreference(userId, artistId, preference);
+        await logUserEvent({ userId: userId, entityType: 'artist', entityId: artistId, eventType: 'set_preference', eventData: { preference } });
+        return handleResponse(res, 200, 'User artist preference set successfully', userArtistPreference);
     } catch (err) {
         next(err);
     }

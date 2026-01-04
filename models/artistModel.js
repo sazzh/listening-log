@@ -32,3 +32,10 @@ export const deleteArtist = async (artistId) => {
     const result = await db.query('DELETE FROM artists WHERE artist_id = $1 RETURNING *', [artistId]);
     return result.rows[0];
 }
+
+// Set user preference for an artist in the database
+export const setUserArtistPreference = async (userId, artistId, preference) => {
+    const result = await db.query('INSERT INTO user_artist_preferences (user_id, artist_id, preference) VALUES ($1, $2, $3) ON CONFLICT (user_id, artist_id) DO UPDATE SET preference = EXCLUDED.preference RETURNING *',
+        [userId, artistId, preference]);
+    return result.rows[0];
+}

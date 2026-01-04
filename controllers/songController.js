@@ -1,5 +1,6 @@
 import handleResponse from "../Utils/responseHandler.js";
 import * as songModel from "../models/songModel.js";
+import { logUserEvent } from "../models/userEventModel.js";
 
 export const createSong = async (req, res, next) => {
     const { songName, songLength, dateReleased, artistIds, albumIds, trackNumbers } = req.body;
@@ -70,6 +71,18 @@ export const deleteSong = async (req, res, next) => {
             return handleResponse(res, 404, 'Song not found');
         }
         return handleResponse(res, 200, 'Song deleted successfully', deletedSong);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const setUserSongPreference = async (req, res, next) => {
+    const { preference, listenedTo } = req.body;
+    const songId = req.params.id; // from url parameter
+    try {
+        const userSongPreference = await songModel.setUserSongPreference(req.user.user_id, songId, preference, listenedTo);
+        await logUserEvent({ userId: req.user.user_id, entityType: 'song', entityId: songId, eventType: 'set_preference', eventData: { preference, listenedTo } });
+        return handleResponse(res, 200, 'User song preference set successfully', userSongPreference);
     } catch (err) {
         next(err);
     }

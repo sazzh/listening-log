@@ -60,3 +60,12 @@ export const deleteSong = async (songId) => {
     const result = await db.query('DELETE FROM songs WHERE song_id = $1 RETURNING *', [songId]);
     return result.rows[0];
 }
+
+// Set a user's preference for a song in the database
+// On conflict of userId and songId, update existing record
+export const setUserSongPreference = async (userId, songId, preference, listenedTo) => {
+    const result = await db.query('INSERT INTO user_song_preferences (user_id, song_id, preference, listened_to) VALUES ($1, $2, $3, $4) ON CONFLICT (user_id, song_id) DO UPDATE SET preference = EXCLUDED.preference, listened_to = EXCLUDED.listened_to RETURNING *',
+        [userId, songId, preference, listenedTo]
+    );
+    return result.rows[0];
+}

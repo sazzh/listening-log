@@ -2,7 +2,7 @@ import handleResponse from "../Utils/responseHandler.js";
 import * as playlistModel from "../models/playlistModel.js";
 
 export const getUserPlaylists = async (req, res, next) => {
-    const userId = req.params.userId;
+    const userId = req.user.user_id; // Get user ID from authenticated request
     try {
         const playlists = await playlistModel.getUserPlaylists(userId);
         return handleResponse(res, 200, 'Playlists fetched successfully', playlists);

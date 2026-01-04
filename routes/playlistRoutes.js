@@ -1,9 +1,10 @@
 import express from 'express';
 import { getUserPlaylists, getPlaylistById, createPlaylist, addSongToPlaylist, removeSongFromPlaylist, updatePlaylist, deletePlaylist } from '../controllers/playlistController.js';
+import protect from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/user/:userId', getUserPlaylists); // Playlists only exist per user not app wide
+router.get('/', protect, getUserPlaylists); // Playlists only exist per user not app wide
 router.get('/:id', getPlaylistById);
 router.post('/', createPlaylist);
 router.post('/:id/songs', addSongToPlaylist);

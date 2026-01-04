@@ -79,9 +79,10 @@ export const deleteSong = async (req, res, next) => {
 export const setUserSongPreference = async (req, res, next) => {
     const { preference, listenedTo } = req.body;
     const songId = req.params.id; // from url parameter
+    const userId = req.user.user_id;
     try {
-        const userSongPreference = await songModel.setUserSongPreference(req.user.user_id, songId, preference, listenedTo);
-        await logUserEvent({ userId: req.user.user_id, entityType: 'song', entityId: songId, eventType: 'set_preference', eventData: { preference, listenedTo } });
+        const userSongPreference = await songModel.setUserSongPreference(userId, songId, preference, listenedTo);
+        await logUserEvent({ userId: userId, entityType: 'song', entityId: songId, eventType: 'set_preference', eventData: { preference, listenedTo } });
         return handleResponse(res, 200, 'User song preference set successfully', userSongPreference);
     } catch (err) {
         next(err);

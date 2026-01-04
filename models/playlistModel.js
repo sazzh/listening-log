@@ -20,16 +20,27 @@ export const createPlaylist = async (playlistName, playlistDescription, userId) 
 };
 
 // Create song playlist association in the database
-export const addSongToPlaylist = async (playlistId, songId) => {
-    const result = await db.query('INSERT INTO song_playlists (playlist_id, song_id) VALUES ($1, $2) RETURNING *',
-        [playlistId, songId]);
+export const addSongToPlaylist = async (playlistId, songId, userId) => {
+    // Ensure that the playlist belongs to the user before adding the song
+    const result = await db.query(`INSERT INTO song_playlists (playlist_id, song_id) 
+        SELECT p.playlist_id, $2
+        FROM playlists p
+        WHERE p.playlist_id = $1 AND p.user_id = $3
+        RETURNING *;`,
+        [playlistId, songId, userId]);
     return result.rows[0];
 };
 
 // Remove song from playlist in the database
-export const removeSongFromPlaylist = async (playlistId, songId) => {
-    const result = await db.query('DELETE FROM song_playlists WHERE playlist_id = $1 AND song_id = $2 RETURNING *',
-        [playlistId, songId]);
+export const removeSongFromPlaylist = async (playlistId, songId, userId) => {
+    // Ensure that the playlist belongs to the user before removing the song
+    const result = await db.query(`DELETE FROM song_playlists sp
+        USING playlists p
+        WHERE sp.playlist_id = p.playlist_id
+        AND sp.song_id = $2
+        AND p.user_id = $3
+        RETURNING *;`,
+        [playlistId, songId, userId]);
     return result.rows[0];
 };
 

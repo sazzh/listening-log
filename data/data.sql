@@ -107,6 +107,26 @@ CREATE TABLE IF NOT EXISTS UserEvents (
 	-- no updated_at as read-only after creation
 )
 
+-- Associative table to store user preferences of artists
+CREATE TABLE IF NOT EXISTS User_Artist_Preferences (
+	user_id INTEGER NOT NULL REFERENCES users(user_id),
+	artist_id INTEGER NOT NULL REFERENCES artists(artist_id),
+	preference TEXT NOT NULL, -- fav, like, neutral, dislike
+	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+)
+
+-- Associative table to store user preferences of songs
+CREATE TABLE IF NOT EXISTS User_Song_Preferences (
+	user_id INTEGER NOT NULL REFERENCES users(user_id),
+	song_id INTEGER NOT NULL REFERENCES songs(song_id),
+	preference TEXT NOT NULL, -- love, like, neutral, dislike, hate
+	listened_to BOOL NOT NULL DEFAULT TRUE,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT now(), -- aka first recorded listen
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+)
+
+
 -- Create trigger to update 'updated_at' timestamp on record modification
 CREATE OR REPLACE FUNCTION set_updated_at()
 RETURNS TRIGGER AS $$
@@ -132,7 +152,7 @@ BEFORE UPDATE ON songs
 FOR EACH ROW
 EXECUTE FUNCTION set_updated_at();
 
---  TO DO: add trigger to userartistprefs, artistnotes, users, artistnotes, usersongprefs, playlists tablesCREATE TRIGGER users_set_updated_at
+CREATE TRIGGER users_set_updated_at
 BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION set_updated_at();

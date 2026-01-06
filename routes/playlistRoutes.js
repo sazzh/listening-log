@@ -6,11 +6,11 @@ const router = express.Router();
 
 // Majority are protected as playlists are user specific and not accessible app wide
 router.get('/', protect, getUserPlaylists);
-router.get('/:id', getPlaylistById);
+router.get('/:id', protect, getPlaylistById);
 router.post('/', protect, createPlaylist);
 router.post('/:id/songs', protect, addSongToPlaylist);
 router.delete('/:id/songs/:songId', protect, removeSongFromPlaylist);
 router.put('/:id', protect, updatePlaylist);
-router.delete('/:id', protect,deletePlaylist);
+router.delete('/:id', protect, deletePlaylist);
 
 export default router;

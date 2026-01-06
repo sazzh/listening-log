@@ -14,8 +14,9 @@ export const getUserPlaylists = async (req, res, next) => {
 
 export const getPlaylistById = async (req, res, next) => {
     const playlistId = req.params.playlistId;
+    const userId = req.user.user_id;
     try {
-        const playlist = await playlistModel.getPlaylistById(playlistId);
+        const playlist = await playlistModel.getPlaylistById(playlistId, userId);
         return handleResponse(res, 200, 'Playlist fetched successfully', playlist);
     } catch (err) {
         next(err);

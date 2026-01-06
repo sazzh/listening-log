@@ -7,8 +7,9 @@ export const getUserPlaylists = async (userId) => {
 };
 
 // Get a single playlist by Id from the database
-export const getPlaylistById = async (playlistId) => {
-    const result = await db.query('SELECT * FROM playlists WHERE playlist_id = $1', [playlistId]);
+export const getPlaylistById = async (playlistId, userId) => {
+    const result = await db.query('SELECT * FROM playlists WHERE playlist_id = $1 AND user_id = $2',
+        [playlistId, userId]);
     return result.rows[0];
 };
 

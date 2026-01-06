@@ -22,7 +22,7 @@ const HEADERS = {
 // Search for artists in MusicBrainz by name
 export const searchArtist = async (artistName) => {
     try {
-        const res = await fetch( `${ROOT_URL}artist?query=${encodeURIComponent(artistName)}`, 
+        const res = await fetch( `${ROOT_URL}/artist?query=${encodeURIComponent(artistName)}&limit=10`, 
             { headers: HEADERS } );
 
         checkResponse(res);
@@ -59,6 +59,6 @@ fetchArtistByMBID('7cc968e5-7ff7-4ec8-9334-c3344bafd383');
 
 const checkResponse = (res) => {
     if (!res.ok) {
-        throw new Error(`MusicBrainz API request failed: ${res.status} ${res.statusText}`);
+        throw new Error(`Could not fetch resource from MusicBrainz: ${res.status} ${res.statusText}`);
     }
 };

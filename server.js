@@ -6,6 +6,7 @@ import songRoutes from './routes/songRoutes.js';
 import albumRoutes from './routes/albumRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import playlistRoutes from './routes/playlistRoutes.js';
+import artistNotesRoutes from './routes/notes/artistNotesRoutes.js';
 import errorHandler from './Utils/errorHandler.js';
 import cookieParser from 'cookie-parser';
 
@@ -29,6 +30,7 @@ app.use('/api/songs', songRoutes);
 app.use('/api/albums', albumRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/playlists', playlistRoutes);
+app.use('/api/artists', artistNotesRoutes);
 
 // Error handling
 app.use(errorHandler);

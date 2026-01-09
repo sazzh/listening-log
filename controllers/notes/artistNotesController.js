@@ -21,7 +21,17 @@ export const createArtistNote = async (req, res, next) => {
 
 // Get all notes for a specific artist by a user from the database
 
-// Get all notes for artists by a user from the database
+// Get all notes for all artists by a user from the database
+export const getAllArtistNotes = async (req, res, next) => {
+    const userId = req.user.user_id;
+
+    try {
+        const notes = await artistNotesModel.getAllArtistNotesByUser(userId);
+        return handleResponse(res, 200, 'Artist notes fetched successfully', notes);
+    } catch (err) {
+        next(err);
+    }
+};
 
 // Update an existing artist note in the database
 
